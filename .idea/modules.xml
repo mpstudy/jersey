@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jersey.iml" filepath="$PROJECT_DIR$/.idea/modules/jersey.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jersey_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jersey_main.iml" group="jersey" />
+      <module fileurl="file://C:\kitchensink\jersey\.idea\modules\jersey_main.iml" filepath="C:\kitchensink\jersey\.idea\modules\jersey_main.iml" group="jersey" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jersey_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jersey_test.iml" group="jersey" />
+      <module fileurl="file://C:\kitchensink\jersey\.idea\modules\jersey_test.iml" filepath="C:\kitchensink\jersey\.idea\modules\jersey_test.iml" group="jersey" />
     </modules>
   </component>
 </project>

@@ -1,4 +1,4 @@
-jersey + grizzly + gradle + intellij
+jersey + grizzly + gradle + intellij + derby
 
 gradle run 으로 실행 해야함.
 

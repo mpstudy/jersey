@@ -1,4 +1,4 @@
-package com.nexon.utils;
+package mps.study.utils;
 
 import org.jvnet.hk2.annotations.Service;
 

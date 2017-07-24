@@ -1,10 +1,13 @@
-package com.nexon.vo;
+package mps.study.vo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @Data
@@ -21,5 +24,10 @@ public class Member {
         this.id = id;
         this.pw = pw;
         this.code = code;
+    }
+
+    public Member(String id, String pw) {
+        this.id = id;
+        this.pw = pw;
     }
 }

@@ -3,29 +3,20 @@ apply plugin:'idea'
 apply plugin:'application'
 
 sourceCompatibility = 1.8
-mainClassName = "com.nexon.Server"
+mainClassName = 'mps.study.Server'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.8.+'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.+'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.+'
-    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.+'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jaxrs:2.8.+'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.+'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+'
-
-    compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.+'
-    compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-servlet:2.+'
-
-    compile 'org.glassfish.jersey.inject:jersey-hk2:2.26-b04'
+    compile 'com.h2database:h2:+'
+    compile 'org.glassfish.jersey.core:jersey-server:+'
+    compile 'org.glassfish.jersey.inject:jersey-hk2:+'
+    compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:+'
+    compile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:+'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:+'
     compile 'org.projectlombok:lombok:+'
-    compile 'org.glassfish.jersey.bundles.repackaged:jersey-guava:2.6'
-
-    compile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:2.+'
 }
 
 run{

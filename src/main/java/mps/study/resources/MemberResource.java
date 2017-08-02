@@ -27,6 +27,9 @@ public class MemberResource {
     @Inject
     private TaskExecutor executor;
 
+    /* find(POST /member)
+    * DB 조회
+    * 페이지 이동 없음 사용자 정보 조회용*/
     @GET
     @Path("{mid}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -44,7 +47,9 @@ public class MemberResource {
         log.debug("end!");
     }
 
-    /* singUp(POST /member) */
+    /* singUp(POST /member)
+    * DB 등록
+    * 로그인 페이지로 이동*/
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @ManagedAsync
@@ -61,10 +66,19 @@ public class MemberResource {
         log.debug("end!");
     }
 
-    /* change pw (PUT /member/{id}) */
+    /* change pw (PUT /member/{id})
+    * DB 변경
+    * 세션 만료
+    * 로그인 페이지로 이동*/
 
-    /* withdraw(DELETE /member/{id}) */
+    /* withdraw(DELETE /member/{id})
+    * DB 변경
+    * 세션 만료
+    * 로그인 페이지로 이동*/
 
-    /* signIn(POST /member/login) */
+    /* signIn(POST /member/login)
+    * DB 조회
+    * 세션 등록
+    * 메인 페이지로 이동*/
 
 }

@@ -1,28 +1,32 @@
 package mps.study.model;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @XmlRootElement
 public class Member implements Serializable {
     @Id
     private String mid;
-    private String firstName;
-    private String lastName;
-    private ZonedDateTime joinDate;
-    private boolean isValid;
-    private boolean isWithdraw;
-    private ZonedDateTime withDrawDate;
+    @Column(name = "pw", nullable = false, updatable = true, insertable = true)
+    private String pw;
+    @Column(name = "joinDate", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp joinDate;
+    private boolean isValid = false;
+    private boolean isWithdraw = false;
+    @Column(name = "withDrawDate", nullable = true, updatable = true, insertable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp withDrawDate;
 
     @Embedded
     private Privacy privacy;
 
     public Member() {}
+
 
     public String getMid() {
         return mid;
@@ -32,27 +36,19 @@ public class Member implements Serializable {
         this.mid = mid;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPw() {
+        return pw;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPw(String pw) {
+        this.pw = pw;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public ZonedDateTime getJoinDate() {
+    public Timestamp getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(ZonedDateTime joinDate) {
+    public void setJoinDate(Timestamp joinDate) {
         this.joinDate = joinDate;
     }
 
@@ -72,11 +68,11 @@ public class Member implements Serializable {
         isWithdraw = withdraw;
     }
 
-    public ZonedDateTime getWithDrawDate() {
+    public Timestamp getWithDrawDate() {
         return withDrawDate;
     }
 
-    public void setWithDrawDate(ZonedDateTime withDrawDate) {
+    public void setWithDrawDate(Timestamp withDrawDate) {
         this.withDrawDate = withDrawDate;
     }
 

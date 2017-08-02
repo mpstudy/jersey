@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
 import mps.study.utils.TaskExecutor;
 import org.avaje.agentloader.AgentLoader;
+import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -26,6 +27,10 @@ public class Server {
                 GrizzlyHttpServerFactory.createHttpServer(
                         BASE_URI,
                         ResourceConfig.forApplicationClass(RsResourceConfig.class));
+
+        // static assets
+        server.getServerConfiguration().addHttpHandler(
+                new CLStaticHttpHandler(Server.class.getClassLoader(), "/assets/"), "/static");
 
         Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
         openBrowser();

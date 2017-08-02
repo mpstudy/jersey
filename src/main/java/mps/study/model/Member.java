@@ -1,18 +1,16 @@
 package mps.study.model;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
-@XmlRootElement
 public class Member implements Serializable {
     @Id
-    private String mid;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long mid;
+    @Column(name = "uid", nullable = false, updatable = false, insertable = true)
+    private String uid;
     @Column(name = "pw", nullable = false, updatable = true, insertable = true)
     private String pw;
     @Column(name = "joinDate", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -22,18 +20,32 @@ public class Member implements Serializable {
     @Column(name = "withDrawDate", nullable = true, updatable = true, insertable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp withDrawDate;
 
+    @Column(name = "sid", nullable = true, updatable = true, insertable = true)
+    private String sid;
+    @Column(name = "expireDate", nullable = true, updatable = true, insertable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp expireDate;
+    @Column(name = "permissions", nullable = true, updatable = true, insertable = true)
+    private String permissions;
+
     @Embedded
     private Privacy privacy;
 
     public Member() {}
 
-
-    public String getMid() {
+    public Long getMid() {
         return mid;
     }
 
-    public void setMid(String mid) {
+    public void setMid(Long mid) {
         this.mid = mid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getPw() {
@@ -82,5 +94,29 @@ public class Member implements Serializable {
 
     public void setPrivacy(Privacy privacy) {
         this.privacy = privacy;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
+    }
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
+    }
+
+    public Timestamp getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Timestamp expireDate) {
+        this.expireDate = expireDate;
     }
 }

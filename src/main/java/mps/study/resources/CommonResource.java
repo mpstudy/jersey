@@ -1,24 +1,14 @@
 package mps.study.resources;
 
-import com.avaje.ebean.Ebean;
-import mps.study.model.Member;
 import mps.study.utils.TaskExecutor;
-import org.glassfish.jersey.server.ManagedAsync;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.net.URI;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
-import static javax.ws.rs.core.Response.Status.*;
+import javax.ws.rs.core.UriBuilder;
 
 @Path("/")
 public class CommonResource {
@@ -28,18 +18,11 @@ public class CommonResource {
     private TaskExecutor executor;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
-    public void find(@Suspended final AsyncResponse asyncResponse) {
-        log.debug("hi!");
+    public Response index() {
+        log.debug("index!");
 
-        CompletableFuture.supplyAsync(() -> "hello", executor)
-                .thenApply(result -> asyncResponse.resume(Response.status(OK).entity(result).build()))
-                .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
-
-        asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);
-        asyncResponse.setTimeoutHandler(ar -> ar.resume(Response.status(SERVICE_UNAVAILABLE).entity("Operation timed out").build()));
-
-        log.debug("end!");
+        return Response.seeOther(
+                UriBuilder.fromPath("/static/index.html").build()
+        ).build();
     }
 }

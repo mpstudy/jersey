@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="signIn" class="panel">
+        <input id="sign_in_uid"/>
+        <input id="sign_in_pw" type="password">
+        <button id="sign_in_btn">SignIn</button>
+        <button id="go_sign_up_btn" style="display: none">SignUp</button>
+    </div>
+
+    <script>
+        $('#signInBtn').onclick(function() {
+            axios.post('/member/signIn', {
+                uid: $('#sign_in_uid').value,
+                pw: $('#sign_in_pw').value
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        });
+    </script>
+
+    <div id="signUp" class="panel" style="display: none">
+        <input id="uid"/>
+        <input id="pw" type="password">
+        <input id="pwConfirm" type="password">
+        <input id="firstName">
+        <input id="lastName">
+        <button id="signUpBtn">SignUp</button>
+    </div>
+
+    <div id="changePw" class="panel" style="display: none">
+        <input id="pw" type="password">
+        <input id="pwConfirm" type="password">
+        <button id="changePwBtn">Change Password</button>
+    </div>
+
+    <div id="hello" class="panel" style="display: none">
+        <p id="message"></p>
+        <button id="goChangePwBtn">Change Password</button>
+        <button id="withDraw">WithDraw</button>
+    </div>
+
+    <div id="result"></div>
+
+</div>
+
+</body>
+</html>

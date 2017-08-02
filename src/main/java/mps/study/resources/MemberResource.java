@@ -29,7 +29,7 @@ public class MemberResource {
 
     /* find(POST /member)
     * DB 조회
-    * 페이지 이동 없음 사용자 정보 조회용*/
+    * 사용자 정보 조회용*/
     @GET
     @Path("{mid}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,8 +48,7 @@ public class MemberResource {
     }
 
     /* singUp(POST /member)
-    * DB 등록
-    * 로그인 페이지로 이동*/
+    * DB 등록*/
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @ManagedAsync
@@ -68,17 +67,14 @@ public class MemberResource {
 
     /* change pw (PUT /member/{id})
     * DB 변경
-    * 세션 만료
-    * 로그인 페이지로 이동*/
+    * 세션 만료*/
 
     /* withdraw(DELETE /member/{id})
     * DB 변경
-    * 세션 만료
-    * 로그인 페이지로 이동*/
+    * 세션 만료*/
 
     /* signIn(POST /member/login)
     * DB 조회
-    * 세션 등록
-    * 메인 페이지로 이동*/
+    * 세션 등록*/
 
 }

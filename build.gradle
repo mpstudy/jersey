@@ -1,24 +1,43 @@
-apply plugin:'java'
-apply plugin:'idea'
-apply plugin:'application'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
 
-sourceCompatibility = 1.8
-mainClassName = 'mps.study.Server'
+mainClassName = "mps.study.Server"
+
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    compile 'com.h2database:h2:+'
+
+    // jersey-grizzly
     compile 'org.glassfish.jersey.core:jersey-server:+'
     compile 'org.glassfish.jersey.inject:jersey-hk2:+'
     compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:+'
     compile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:+'
     compile 'org.glassfish.jersey.media:jersey-media-json-jackson:+'
+
+
+    // logger
+    compile 'org.slf4j:slf4j-api:1.7.+'
+    compile 'ch.qos.logback:logback-classic:1.+'
+
+    // H2
+    compile 'com.h2database:h2:1.4.196'
+
+    // EBean
+    compile 'org.avaje.ebeanorm:avaje-ebeanorm:7.1.1'
+    compile 'org.avaje:avaje-agentloader:2.1.2'
+    compile 'org.avaje.ebeanorm:avaje-ebeanorm-agent:4.9.1'
+
     compile 'org.projectlombok:lombok:+'
+
+    testCompile 'junit:junit:4.+'
+
 }
 
-run{
-    standardInput = System.in
-}
+run { standardInput = System.in }

@@ -183,9 +183,11 @@ public class MemberResource {
                             .eq("pw", member.getPw())
                             .eq("isWithdraw", false)
                             .findUnique();
+
             if (Objects.isNull(current)) {
                 return makeResponse(NOT_FOUND, "Not found member.", null);
             }
+
             current.setSid(getSid());
             current.setExpireDate(getExpireDate());
             Ebean.update(current);

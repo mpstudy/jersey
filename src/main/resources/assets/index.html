@@ -8,53 +8,178 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 </head>
 <body>
 
 <div class="container">
 
-    <div id="signIn" class="panel">
-        <input id="sign_in_uid"/>
-        <input id="sign_in_pw" type="password">
+    <script>
+        var config = {
+            headers: {'X-Sid': localStorage.getItem('sid')}
+        }
+
+        $(document).ready(function() {
+            $('#result').text('');
+            axios.get('/member/'+ localStorage.getItem('uid'), config)
+                .then(function (response) {
+                    $('#hello').show();
+                    $('#message').text('hello!,' + localStorage.getItem('uid'));
+                })
+                .catch(function (error) {
+                    $('#sign_in').show();
+                });
+        });
+    </script>
+
+    <div id="sign_in" class="panel" style="display: none">
+        <input id="sign_in_uid" placeholder="user id"/>
+        <input id="sign_in_pw" type="password" placeholder="password">
         <button id="sign_in_btn">SignIn</button>
         <button id="go_sign_up_btn" style="display: none">SignUp</button>
     </div>
 
     <script>
-        $('#signInBtn').onclick(function() {
-            axios.post('/member/signIn', {
-                uid: $('#sign_in_uid').value,
-                pw: $('#sign_in_pw').value
+        $('#sign_in_btn').click(function() {
+            $('#result').text('');
+            axios.post('/member/signIn',  {
+                uid: $('#sign_in_uid').val(),
+                pw: $('#sign_in_pw').val()
             })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then(function (response) {
+                    $('#sign_in').hide();
+                    $('#hello').show();
+                    localStorage.setItem('sid', response.data.data.sid);
+                    localStorage.setItem('uid', response.data.data.uid);
+                    $('#message').text('hello!,' + localStorage.getItem('uid'));
+                })
+                .catch(function (error) {
+                    $('#go_sign_up_btn').show();
+                    $('#result').text(error);
+                });
+        });
+
+        $('#go_sign_up_btn').click(function() {
+            $('#result').text('');
+            $('#sign_up').show();
+            $('#sign_up_uid').val($('#sign_in_uid').val());
+            $('#sign_up_pw').val($('#sign_in_pw').val())
+            $('#sign_in').hide();
         });
     </script>
 
-    <div id="signUp" class="panel" style="display: none">
-        <input id="uid"/>
-        <input id="pw" type="password">
-        <input id="pwConfirm" type="password">
-        <input id="firstName">
-        <input id="lastName">
-        <button id="signUpBtn">SignUp</button>
+    <div id="sign_up" class="panel" style="display: none">
+        <input id="sign_up_uid" placeholder="user id"/>
+        <input id="sign_up_pw" type="password" placeholder="password">
+        <input id="sign_up_pw_confirm" type="password" placeholder="confirm">
+        <input id="sign_up_first_name" placeholder="first name">
+        <input id="sign_up_last_name" placeholder="last name">
+        <button id="sign_up_btn">SignUp</button>
     </div>
 
-    <div id="changePw" class="panel" style="display: none">
-        <input id="pw" type="password">
-        <input id="pwConfirm" type="password">
-        <button id="changePwBtn">Change Password</button>
-    </div>
+    <script>
+        $('#sign_up_btn').click(function() {
+            $('#result').text('');
+            if ($('#sign_up_pw').val() != $('#sign_up_pw_confirm').val()) {
+                $('#result').text('Invalid password.');
+                return false;
+            }
+
+            var privacy = {
+                firstName:$('#sign_up_first_name').val(),
+                lastName:$('#sign_up_last_name').val()
+            }
+
+            axios.post('/member',  {
+                uid: $('#sign_up_uid').val(),
+                pw: $('#sign_up_pw').val(),
+                privacy: privacy,
+                permissions: "userInfo:rw,freeBoard:r"
+            })
+                .then(function (response) {
+                    $('#sign_in').show();
+                    $('#sign_up').hide();
+                    $('#go_sign_up_btn').hide();
+                })
+                .catch(function (error) {
+                    $('#result').text(error);
+                });
+        });
+    </script>
 
     <div id="hello" class="panel" style="display: none">
         <p id="message"></p>
-        <button id="goChangePwBtn">Change Password</button>
-        <button id="withDraw">WithDraw</button>
+        <button id="go_change_pw">Change Password</button>
+        <button id="withdraw">WithDraw</button>
     </div>
+
+    <script>
+        $('#go_change_pw').click(function() {
+            $('#result').text('');
+            $('#sign_up').hide();
+            $('#change_pw').show();
+        });
+
+        $('#withdraw').click(function() {
+            $('#result').text('');
+            var config = {
+                headers: {'X-Sid': localStorage.getItem('sid')}
+            }
+
+            axios.delete('/member/'+ localStorage.getItem('uid'), config)
+                .then(function (response) {
+                    $('#sign_in').show();
+                    $('#hello').hide();
+                    $('#go_sign_up_btn').hide();
+                    $('#change_pw').hide();
+                    localStorage.removeItem('sid');
+                    localStorage.removeItem('uid');
+                })
+                .catch(function (error) {
+                    $('#result').text(error);
+                });
+        });
+    </script>
+
+    <div id="change_pw" class="panel" style="display: none">
+        <input id="pw" type="password" placeholder="password">
+        <input id="pw_confirm" type="password" placeholder="confirm">
+        <button id="change_pw_btn">Change Password</button>
+    </div>
+
+    <script>
+        $('#change_pw_btn').click(function() {
+            $('#result').text('');
+            if ($('#pw').val() != $('#pw_confirm').val()) {
+                $('#result').text('Invalid password.');
+                return false;
+            }
+
+            var config = {
+                headers: {'X-Sid': localStorage.getItem('sid')}
+            }
+
+            var uid = localStorage.getItem('uid');
+
+            axios.put('/member/' + uid,  {
+                uid: uid,
+                pw: $('#pw').val()
+            }, config)
+                .then(function (response) {
+                    $('#sign_in').show();
+                    $('#change_pw').hide();
+                    $('#go_sign_up_btn').hide();
+                    $('#hello').hide();
+                    localStorage.removeItem('sid');
+                    localStorage.removeItem('uid');
+                })
+                .catch(function (error) {
+                    $('#result').text(error);
+                });
+
+        });
+
+    </script>
 
     <div id="result"></div>
 

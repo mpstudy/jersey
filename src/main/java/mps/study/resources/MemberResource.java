@@ -34,18 +34,16 @@ public class MemberResource {
     private TaskExecutor executor;
 
     @GET
-    @Path("{uid}")
     @Produces(MediaType.APPLICATION_JSON)
     @ManagedAsync
     public void findMember(@DefaultValue("") @HeaderParam("X-Sid") String sid,
-                           @PathParam("uid") String uid,
                            @Suspended final AsyncResponse asyncResponse) {
         log.debug("findMember!");
 
         CompletableFuture.supplyAsync(() -> {
             Member current = Ebean.find(Member.class)
                             .where()
-                            .eq("uid", uid)
+                            .eq("sid", sid)
                             .eq("isWithdraw", false)
                             .findUnique();
             if (Objects.isNull(current)) {
@@ -57,7 +55,7 @@ public class MemberResource {
             }
             return makeResponse(ACCEPTED, "accepted.", current);
         }, executor)
-                .thenApply(result -> asyncResponse.resume(result))
+                .thenApply(asyncResponse::resume)
                 .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
 
         asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);
@@ -67,6 +65,7 @@ public class MemberResource {
     }
 
     @POST
+    @Path("signUp")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ManagedAsync
@@ -86,7 +85,7 @@ public class MemberResource {
             Ebean.save(member);
             return makeResponse(CREATED, "created.", member);
         }, executor)
-                .thenApply(result -> asyncResponse.resume(result))
+                .thenApply(asyncResponse::resume)
                 .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
 
         asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);
@@ -96,7 +95,6 @@ public class MemberResource {
     }
 
     @PUT
-    @Path("{uid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ManagedAsync
@@ -122,7 +120,42 @@ public class MemberResource {
             Ebean.update(current);
             return makeResponse(ACCEPTED, "accepted.", current);
         }, executor)
-                .thenApply(result -> asyncResponse.resume(result))
+                .thenApply(asyncResponse::resume)
+                .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
+
+        asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);
+        asyncResponse.setTimeoutHandler(ar -> ar.resume(Response.status(SERVICE_UNAVAILABLE).entity("Operation timed out").build()));
+
+        log.debug("end!");
+    }
+
+    @PUT
+    @Path("signOut")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ManagedAsync
+    public void signOut(@DefaultValue("") @HeaderParam("X-Sid") String sid,
+                        @Suspended final AsyncResponse asyncResponse) throws IOException {
+        log.debug("signOut!");
+
+        CompletableFuture.supplyAsync(() -> {
+            Member current = Ebean.find(Member.class)
+                    .where()
+                    .eq("sid", sid)
+                    .eq("isWithdraw", false)
+                    .findUnique();
+            if (Objects.isNull(current)) {
+                return makeResponse(NOT_FOUND, "Not found member.", null);
+            }
+            if (!Objects.equals(current.getSid(), sid)
+                    || current.getExpireDate().before(getNow())) {
+                return makeResponse(UNAUTHORIZED, "unauthorized.", null);
+            }
+            current.setExpireDate(getNow());
+            Ebean.update(current);
+            return makeResponse(ACCEPTED, "accepted.", current);
+        }, executor)
+                .thenApply(asyncResponse::resume)
                 .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
 
         asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);
@@ -132,18 +165,16 @@ public class MemberResource {
     }
 
     @DELETE
-    @Path("{uid}")
     @Produces(MediaType.APPLICATION_JSON)
     @ManagedAsync
     public void removeMember(@DefaultValue("") @HeaderParam("X-Sid") String sid,
-                             @PathParam("uid") String uid,
                              @Suspended final AsyncResponse asyncResponse) throws IOException {
         log.debug("removeMember!");
 
         CompletableFuture.supplyAsync(() -> {
             Member current = Ebean.find(Member.class)
                     .where()
-                    .eq("uid", uid)
+                    .eq("sid", sid)
                     .eq("isWithdraw", false)
                     .findUnique();
             if (Objects.isNull(current)) {
@@ -155,10 +186,12 @@ public class MemberResource {
             }
             current.setWithdraw(true);
             current.setWithDrawDate(getNow());
+            current.setSid("");
+            current.setExpireDate(getNow());
             Ebean.update(current);
             return makeResponse(ACCEPTED, "accepted.", current);
         }, executor)
-                .thenApply(result -> asyncResponse.resume(result))
+                .thenApply(asyncResponse::resume)
                 .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
 
         asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);
@@ -193,7 +226,7 @@ public class MemberResource {
             Ebean.update(current);
             return makeResponse(ACCEPTED, "accepted.", current);
         }, executor)
-                .thenApply(result -> asyncResponse.resume(result))
+                .thenApply(asyncResponse::resume)
                 .exceptionally(e -> asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity(e).build()));
 
         asyncResponse.setTimeout(3000, TimeUnit.MILLISECONDS);

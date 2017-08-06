@@ -21,7 +21,7 @@
 
         $(document).ready(function() {
             $('#result').text('');
-            axios.get('/member/'+ localStorage.getItem('uid'), config)
+            axios.get('/member', config)
                 .then(function (response) {
                     $('#hello').show();
                     $('#message').text('hello!,' + localStorage.getItem('uid'));
@@ -80,7 +80,7 @@
     <script>
         $('#sign_up_btn').click(function() {
             $('#result').text('');
-            if ($('#sign_up_pw').val() != $('#sign_up_pw_confirm').val()) {
+            if ($('#sign_up_pw').val() !== $('#sign_up_pw_confirm').val()) {
                 $('#result').text('Invalid password.');
                 return false;
             }
@@ -90,7 +90,7 @@
                 lastName:$('#sign_up_last_name').val()
             }
 
-            axios.post('/member',  {
+            axios.post('/member/signUp',  {
                 uid: $('#sign_up_uid').val(),
                 pw: $('#sign_up_pw').val(),
                 privacy: privacy,
@@ -109,29 +109,53 @@
 
     <div id="hello" class="panel" style="display: none">
         <p id="message"></p>
-        <button id="go_change_pw">Change Password</button>
-        <button id="withdraw">WithDraw</button>
+        <button id="go_change_pw_btn">Change Password</button>
+        <button id="sign_out_btn">SignOut</button>
+        <button id="withdraw_btn">WithDraw</button>
     </div>
 
     <script>
-        $('#go_change_pw').click(function() {
+        $('#go_change_pw_btn').click(function() {
             $('#result').text('');
             $('#sign_up').hide();
             $('#change_pw').show();
         });
 
-        $('#withdraw').click(function() {
+        $('#withdraw_btn').click(function() {
             $('#result').text('');
             var config = {
                 headers: {'X-Sid': localStorage.getItem('sid')}
             }
 
-            axios.delete('/member/'+ localStorage.getItem('uid'), config)
+            axios.delete('/member', config)
                 .then(function (response) {
                     $('#sign_in').show();
                     $('#hello').hide();
                     $('#go_sign_up_btn').hide();
                     $('#change_pw').hide();
+                    localStorage.removeItem('sid');
+                    localStorage.removeItem('uid');
+                })
+                .catch(function (error) {
+                    $('#result').text(error);
+                });
+        });
+
+        $('#sign_out_btn').click(function() {
+            $('#result').text('');
+
+            var config = {
+                headers: {'X-Sid': localStorage.getItem('sid')}
+            }
+
+            var uid = localStorage.getItem('uid');
+
+            axios.put('/member/signOut', {}, config)
+                .then(function (response) {
+                    $('#sign_in').show();
+                    $('#change_pw').hide();
+                    $('#go_sign_up_btn').hide();
+                    $('#hello').hide();
                     localStorage.removeItem('sid');
                     localStorage.removeItem('uid');
                 })
@@ -161,7 +185,7 @@
 
             var uid = localStorage.getItem('uid');
 
-            axios.put('/member/' + uid,  {
+            axios.put('/member',  {
                 uid: uid,
                 pw: $('#pw').val()
             }, config)
@@ -176,7 +200,6 @@
                 .catch(function (error) {
                     $('#result').text(error);
                 });
-
         });
 
     </script>

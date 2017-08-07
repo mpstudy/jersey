@@ -35,6 +35,10 @@ public class MemberResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    // @ManagedAsync 의 경우 해당 메소드만을 별도의 스레드로 빠뜨려 작업을 진행 한다.
+    // 이럴 경우 해당 메소드에서 하나 이상의 비동기 작업을 걸기가 어렵다.
+    // CompletableFuture를 사용하면 하나 이상의 비동기 작업을 걸어 각각의 작업 결과물을 동시에 처리 할 수 있다.
+    // https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.2/html/Apache_CXF_Development_Guide/JAXRSAsyncResponse.html#JAXRSAsyncResponse-Processing-FigTMAP
     public void findMember(@DefaultValue("") @HeaderParam("X-Sid") String sid,
                            @Suspended final AsyncResponse asyncResponse) {
         log.debug("findMember!");

@@ -35,7 +35,6 @@ public class MemberResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
     public void findMember(@DefaultValue("") @HeaderParam("X-Sid") String sid,
                            @Suspended final AsyncResponse asyncResponse) {
         log.debug("findMember!");
@@ -68,7 +67,6 @@ public class MemberResource {
     @Path("signUp")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
     public void signUp(Member member,
                        @Suspended final AsyncResponse asyncResponse) throws IOException {
         log.debug("signUp!");
@@ -97,7 +95,6 @@ public class MemberResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
     public void editMember(@DefaultValue("") @HeaderParam("X-Sid") String sid,
                            Member member,
                            @Suspended final AsyncResponse asyncResponse) throws IOException {
@@ -133,7 +130,6 @@ public class MemberResource {
     @Path("signOut")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
     public void signOut(@DefaultValue("") @HeaderParam("X-Sid") String sid,
                         @Suspended final AsyncResponse asyncResponse) throws IOException {
         log.debug("signOut!");
@@ -166,7 +162,6 @@ public class MemberResource {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
     public void removeMember(@DefaultValue("") @HeaderParam("X-Sid") String sid,
                              @Suspended final AsyncResponse asyncResponse) throws IOException {
         log.debug("removeMember!");
@@ -204,7 +199,6 @@ public class MemberResource {
     @Path("signIn")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ManagedAsync
     public void signIn(Member member,
                        @Suspended final AsyncResponse asyncResponse) throws IOException {
         log.debug("signIn!");
